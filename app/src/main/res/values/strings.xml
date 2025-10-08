@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EnglishDictionary</string>
+    <string name="explore_name">Explore</string>
+    <string name="search_name">Search</string>
+</resources>

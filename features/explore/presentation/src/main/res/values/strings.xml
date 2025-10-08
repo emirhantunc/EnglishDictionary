@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_bottom_sheet">Create Folder</string>
+    <string name="label">Give a name to your folder</string>
+    <string name="my_folders">My Folders</string>
+    <string name="delete_action">Delete</string>
+    <string name="close_action">Close</string>
+    <string name="rename_action">Rename</string>
+</resources>
