@@ -47,7 +47,7 @@ fun NavGraphBuilder.SearchScreen(
                 SaveBottomSheet(modifier = modifier, folders = folders, onDismiss = {
                     showBottomSheet = false
                 }, folderSelected = { id ->
-                    viewModel.insertWord(it.word, id, it.definition)
+                    viewModel.insertWord(it.word, id, it.definition,it.audioUrl)
                 })
             }
         }

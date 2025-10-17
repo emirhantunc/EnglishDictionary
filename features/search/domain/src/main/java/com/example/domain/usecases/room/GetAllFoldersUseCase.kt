@@ -1,14 +1,13 @@
 package com.example.domain.usecases.room
 
 import com.example.domain.model.room.FolderRoom
-import com.example.domain.model.room.WordRoom
-import com.example.domain.repository.DictionaryRepository
+import com.example.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetAllFoldersUseCase(
-    private val repository: DictionaryRepository
+    private val repository: SearchRepository
 ) {
-    suspend operator fun invoke(): Flow<List<FolderRoom>>{
+    operator fun invoke(): Flow<List<FolderRoom>>{
         return repository.getAllFolders()
     }
 }

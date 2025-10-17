@@ -4,5 +4,6 @@ data class Word(
     val id: Int,
     val word: String,
     val definition: String,
-    val folderId: Int
+    val folderId: Int,
+    val audio: String
 )

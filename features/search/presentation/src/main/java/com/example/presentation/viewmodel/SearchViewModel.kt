@@ -7,39 +7,46 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.usecases.UseCasesDictionary
+import com.example.domain.usecases.UseCasesSearch
 import com.example.presentation.mapper.toFolderRoomStateList
 import com.example.presentation.mapper.toWordRoom
 import com.example.presentation.mapper.toWordStateList
 import com.example.presentation.model.network.WordState
 import com.example.presentation.model.room.FolderRoomState
 import com.example.presentation.model.room.WordRoomPresentation
+import com.example.ui.ResourceStates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
-import com.example.utils.ResourceStates
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val useCases: UseCasesDictionary
+    private val useCases: UseCasesSearch
 ) : ViewModel() {
     private val _wordState = MutableStateFlow<List<WordState>>(emptyList())
     private val _folderList = MutableStateFlow<List<FolderRoomState>>(emptyList())
     private val _resourceStates = MutableStateFlow<ResourceStates>(ResourceStates.Initial)
 
-    val wordState: StateFlow<List<WordState>> = _wordState
-    val folderList: StateFlow<List<FolderRoomState>> = _folderList
+    val wordState: StateFlow<List<WordState>> = _wordState.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000L),
+        emptyList()
+    )
+    val folderList: StateFlow<List<FolderRoomState>> =
+        _folderList.onStart { getAllFolders() }.stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000L),
+            emptyList()
+        )
     val resourceStates: StateFlow<ResourceStates> = _resourceStates
 
 
-    init {
-        getAllFolders()
-    }
     fun getWordMeaning(word: String) {
         viewModelScope.launch {
             try {
@@ -50,7 +57,7 @@ class SearchViewModel @Inject constructor(
                 _resourceStates.value = ResourceStates.Success
             } catch (e: Exception) {
                 _resourceStates.value = ResourceStates.Error(e.toString())
-                Log.d("dictionaryViewmodel", e.toString())
+                e.printStackTrace()
             }
         }
     }
@@ -74,9 +81,15 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun insertWord(word: String, folderId: Int, definition: String) {
+    fun insertWord(word: String, folderId: Int, definition: String, audioUrl: String) {
         val wordRoomPresentation =
-            WordRoomPresentation(id = 0, word = word, folderId = folderId, definition = definition)
+            WordRoomPresentation(
+                id = 0,
+                word = word,
+                folderId = folderId,
+                definition = definition,
+                audioUrl = audioUrl
+            )
         viewModelScope.launch {
             try {
                 useCases.insertWordUseCase(wordRoomPresentation.toWordRoom())

@@ -47,7 +47,6 @@ fun SearchTextField(
     wordList: List<WordState>
 
 ) {
-
     var word by remember {
         mutableStateOf("")
     }

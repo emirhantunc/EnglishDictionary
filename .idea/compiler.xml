@@ -3,9 +3,13 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
       <module name="EnglishDictionary.feature.dictionary" target="21" />
+      <module name="EnglishDictionary.features.dictionary.data" target="21" />
+      <module name="EnglishDictionary.features.dictionary.domain" target="21" />
+      <module name="EnglishDictionary.features.dictionary.presentation" target="21" />
       <module name="EnglishDictionary.features.wordlist.data" target="21" />
       <module name="EnglishDictionary.features.wordlist.domain" target="21" />
       <module name="EnglishDictionary.features.wordlist.presentation" target="21" />
+      <module name="EnglishDictionary.quiz.data" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

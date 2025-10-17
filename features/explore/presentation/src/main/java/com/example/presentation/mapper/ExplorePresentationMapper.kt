@@ -22,7 +22,8 @@ fun Word.toWordState(): WordState {
         id = id,
         word = word,
         folderId = folderId,
-        definition = definition
+        definition = definition,
+        audio = audio
     )
 }
 

@@ -16,6 +16,9 @@ interface DictionaryDao {
     @Query("SELECT * FROM folder")
     fun getAllFolders(): Flow<List<FolderModel>>
 
+    @Query("SELECT * FROM folder WHERE id=:id")
+    suspend fun getFolderById(id: Int): FolderModel
+
     @Query("SELECT * FROM word WHERE folderId =:folderId")
     suspend fun getWords(folderId: Int): List<WordModel>
 

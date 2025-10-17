@@ -4,6 +4,18 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/build-logic" name="build-logic">
+                <projects>
+                  <project path="$PROJECT_DIR$/build-logic" />
+                  <project path="$PROJECT_DIR$/build-logic/conventions" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="testRunner" value="CHOOSE_PER_TEST" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
@@ -11,19 +23,29 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/build-logic" />
+            <option value="$PROJECT_DIR$/build-logic/conventions" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/data" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/utils" />
             <option value="$PROJECT_DIR$/features" />
-            <option value="$PROJECT_DIR$/features/dictionary" />
-            <option value="$PROJECT_DIR$/features/dictionary/data" />
-            <option value="$PROJECT_DIR$/features/dictionary/domain" />
-            <option value="$PROJECT_DIR$/features/dictionary/presentation" />
+            <option value="$PROJECT_DIR$/features/createfolder" />
+            <option value="$PROJECT_DIR$/features/createfolder/data" />
+            <option value="$PROJECT_DIR$/features/createfolder/domain" />
+            <option value="$PROJECT_DIR$/features/createfolder/presentation" />
             <option value="$PROJECT_DIR$/features/explore" />
             <option value="$PROJECT_DIR$/features/explore/data" />
             <option value="$PROJECT_DIR$/features/explore/domain" />
             <option value="$PROJECT_DIR$/features/explore/presentation" />
+            <option value="$PROJECT_DIR$/features/quiz" />
+            <option value="$PROJECT_DIR$/features/quiz/data" />
+            <option value="$PROJECT_DIR$/features/quiz/domain" />
+            <option value="$PROJECT_DIR$/features/quiz/presentation" />
+            <option value="$PROJECT_DIR$/features/search" />
+            <option value="$PROJECT_DIR$/features/search/data" />
+            <option value="$PROJECT_DIR$/features/search/domain" />
+            <option value="$PROJECT_DIR$/features/search/presentation" />
           </set>
         </option>
       </GradleProjectSettings>

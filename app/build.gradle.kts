@@ -49,7 +49,10 @@ dependencies {
         ":features:search:data",
         ":features:search:presentation",
         ":features:explore:data",
-        ":features:explore:presentation"
+        ":features:explore:presentation",
+        ":features:quiz:presentation",
+        ":features:quiz:data",
+        ":core:ui"
     ).forEach {
         implementation(project(it))
     }
@@ -71,5 +74,4 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.navigation.animation)
-
 }

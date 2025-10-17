@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="my_folder">My Folders</string>
+    <string name="word_memory">Word memory</string>
+    <string name="word_definition">Read the definition. Can you type the word that matches it?</string>
+    <string name="flash_card">Flash cards</string>
+    <string name="flash_definition">Read the definition. Can you remember the word?</string>
+    <string name="audio">Audio</string>
+    <string name="audio_definition">Hear a word\'s pronunciation. Can you type the word you hear?</string>
+    <string name="your_score">Your score %1$d/%2$d</string>
+    <string name="word_memory_title">Which word or phrase matches the definition?</string>
+    <string name="word_memory_your_answer">Your answer</string>
+    <string name="word_memory_correct_answer">Correct answer</string>
+    <string name="word_memory_your_answer_correct">Your answer is correct</string>
+    <string name="word_memory_place_holder">Type the word or phrase</string>
+    <string name="word_memory_submit_button">Submit</string>
+    <string name="word_memory_skip_button">Skip</string>
+    <string name="word_memory_next_button">Next</string>
+    <string name="test_finished">Quiz finished!</string>
+    <string name="finish_button">Finish the quiz</string>
+    <string name="flash_card_tap_card">Tap The Card</string>
+</resources>

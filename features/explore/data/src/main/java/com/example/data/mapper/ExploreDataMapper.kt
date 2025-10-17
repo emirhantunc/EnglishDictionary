@@ -24,22 +24,13 @@ fun List<FolderModel>.toFolderList(): List<Folder> {
 }
 
 
-fun Word.toWordModel(): WordModel {
-    return WordModel(
-        id = id,
-        word = word,
-        folderId = folderId,
-        definition = definition
-    )
-}
-
-
 fun WordModel.toWord(): Word {
     return Word(
         id = id,
         word = word,
         definition = definition,
         folderId = folderId,
+        audio = audio
     )
 }
 

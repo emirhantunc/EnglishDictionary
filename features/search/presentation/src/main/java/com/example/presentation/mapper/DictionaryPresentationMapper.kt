@@ -64,7 +64,8 @@ fun WordRoomPresentation.toWordRoom(): WordRoom {
         id = id,
         word = word,
         folderId = folderId,
-        definition = definition
+        definition = definition,
+        audio = audioUrl
     )
 }
 

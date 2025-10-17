@@ -64,7 +64,8 @@ fun WordRoom.toWordModel(): WordModel {
         id = id,
         word = word,
         folderId = folderId,
-        definition = definition
+        definition = definition,
+        audio = audio
     )
 }
 

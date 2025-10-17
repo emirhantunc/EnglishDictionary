@@ -88,7 +88,8 @@ fun Definitions(
                                 id = 0,
                                 word = "word",
                                 folderId = 0,
-                                definition = definition.definition
+                                definition = definition.definition,
+                                audioUrl = ""
                             )
                         )
 

@@ -6,4 +6,6 @@
     <string name="delete_action">Delete</string>
     <string name="close_action">Close</string>
     <string name="rename_action">Rename</string>
+    <string name="explore">explore</string>
+    <string name="word">word</string>
 </resources>

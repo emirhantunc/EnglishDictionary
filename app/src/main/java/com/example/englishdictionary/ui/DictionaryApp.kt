@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
@@ -44,13 +45,25 @@ fun DictionaryApp() {
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            TopBarApplication(currentRoute = dictionaryAppState.currentRouteTopBar)
+            TopBarApplication(
+                currentRoute = dictionaryAppState.currentRouteTopBar,
+                modifier = modifier,
+                clickEvents = { events ->
+                    when (events) {
+                        TopIconClicked.WordClicked -> {
+                           dictionaryAppState.controller.popBackStack(
+                               route = Screen.Explore.route,
+                               inclusive = false
+                           )
+                        }
+                    }
+                },
+            )
         },
         bottomBar = {
             BottomBarApplication(
                 selectedItem = dictionaryAppState.bottomItemSelected,
-                onClickExplorer = { dictionaryAppState.navigateToExplorer() },
-                onClickDictionary = { dictionaryAppState.navigateDictionary() },
+                dictionaryAppState = dictionaryAppState,
                 modifier = modifier
             )
         }) { innerPadding ->
@@ -61,10 +74,29 @@ fun DictionaryApp() {
 @Composable
 fun BottomBarApplication(
     selectedItem: BottomItem,
-    onClickExplorer: () -> Unit,
-    onClickDictionary: () -> Unit,
+    dictionaryAppState: DictionaryAppState,
     modifier: Modifier
 ) {
+    val list: List<BottomItems> = listOf(
+        BottomItems(
+            BottomItem.SEARCH.drawerTabIcon,
+            BottomItem.SEARCH.title,
+            onClick = { dictionaryAppState.navigateSearch() },
+            bottomItem = BottomItem.SEARCH
+        ),
+        BottomItems(
+            BottomItem.EXPLORE.drawerTabIcon,
+            BottomItem.EXPLORE.title,
+            onClick = { dictionaryAppState.navigateToExplorer() },
+            bottomItem = BottomItem.EXPLORE
+        ),
+        BottomItems(
+            BottomItem.QUIZ.drawerTabIcon,
+            BottomItem.QUIZ.title,
+            onClick = { dictionaryAppState.navigateQuiz() },
+            bottomItem = BottomItem.QUIZ
+        )
+    )
     Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
 
     NavigationBar(
@@ -73,58 +105,60 @@ fun BottomBarApplication(
             .fillMaxWidth(),
         containerColor = Color.White
     ) {
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = BottomItem.DICTIONARY.drawerTabIcon,
-                    modifier = Modifier.size(20.dp),
-                    contentDescription = null,
-                )
-            },
-            label = {
-                Text(
-                    text = stringResource(id = BottomItem.DICTIONARY.title),
-                    fontSize = 13.sp,
-                    color = Color.Black
-                )
-            },
-            selected = BottomItem.DICTIONARY == selectedItem,
-            onClick = onClickDictionary,
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-        )
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = BottomItem.EXPLORE.drawerTabIcon,
-                    modifier = Modifier.size(20.dp),
-                    contentDescription = null,
-                )
-            },
-            label = {
-                Text(
-                    text = stringResource(id = BottomItem.EXPLORE.title),
-                    fontSize = 13.sp,
-                    color = Color.Black
-                )
-            },
-            selected = BottomItem.EXPLORE == selectedItem,
-            onClick = onClickExplorer,
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-        )
-
+        list.forEach { item ->
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        modifier = Modifier.size(20.dp),
+                        contentDescription = null,
+                    )
+                },
+                label = {
+                    Text(
+                        text = stringResource(id = item.name),
+                        fontSize = 13.sp,
+                        color = Color.Black
+                    )
+                },
+                selected = item.bottomItem == selectedItem,
+                onClick = item.onClick,
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarApplication(
-    currentRoute: TopBarContent
+    currentRoute: TopBarContent,
+    modifier: Modifier,
+    clickEvents: (TopIconClicked) -> Unit
 ) {
+
     Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(0xFFFFD54F)
         ),
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    val event = currentRoute.onTopIconClicked
+                    clickEvents(event)
+                }, modifier = modifier
+                    .size(26.dp)
+                    .padding(start = 6.dp)
+            ) {
+                Icon(
+                    imageVector = currentRoute.imageVector ?: return@IconButton,
+                    contentDescription = null,
+                    modifier = modifier.size(26.dp),
+                    tint = Color.White
+                )
+            }
+        },
         title = {
             Text(
                 text = stringResource(id = currentRoute.title),
@@ -137,6 +171,7 @@ fun TopBarApplication(
         },
     )
 }
+
 fun Activity.hideSystemBars() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val controller = WindowInsetsControllerCompat(window, window.decorView)
@@ -144,3 +179,4 @@ fun Activity.hideSystemBars() {
     controller.systemBarsBehavior =
         WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 }
+

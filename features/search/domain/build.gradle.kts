@@ -7,7 +7,4 @@ android {
     namespace = "com.example.domain"
 }
 
-dependencies {
-
-
-}
+dependencies {}

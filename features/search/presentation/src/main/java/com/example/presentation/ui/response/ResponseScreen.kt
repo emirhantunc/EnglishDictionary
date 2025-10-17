@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.presentation.model.network.WordState
 import com.example.presentation.model.room.WordRoomPresentation
-import com.example.utils.ResourceStates
-import com.example.utils.toastMessage
+import com.example.ui.ResourceStates
+import com.example.ui.components.ProgressBar
+import com.example.ui.toastMessage
 
 @Composable
 fun ResponseScreen(
@@ -35,7 +36,6 @@ fun ResponseScreen(
     resourceStates: ResourceStates,
     wordState: List<WordState>,
     bottomSheet: (WordRoomPresentation) -> Unit
-
 ) {
     val flingBehavior = remember {
         object : FlingBehavior {
@@ -51,9 +51,7 @@ fun ResponseScreen(
             toastMessage(message, context)
         }
 
-        ResourceStates.Initial -> {
-
-        }
+        ResourceStates.Initial -> {}
 
         ResourceStates.Loading -> {
             Box(
@@ -62,11 +60,7 @@ fun ResponseScreen(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp),
-                    color = Color(0xFFFFD54F),
-                    strokeWidth = 4.dp
-                )
+                ProgressBar(modifier = modifier)
             }
         }
 
@@ -103,7 +97,8 @@ fun ResponseScreen(
                                     id = 0,
                                     word = wordState.first().word,
                                     folderId = 0,
-                                    definition = it.definition
+                                    definition = it.definition,
+                                    audioUrl = wordState.first().phonetics.first().audio
                                 )
                             )
                         }
