@@ -1,6 +1,7 @@
 package com.example.englishdictionary.ui
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -25,6 +26,9 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -45,19 +49,10 @@ fun DictionaryApp() {
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
+
             TopBarApplication(
                 currentRoute = dictionaryAppState.currentRouteTopBar,
                 modifier = modifier,
-                clickEvents = { events ->
-                    when (events) {
-                        TopIconClicked.WordClicked -> {
-                           dictionaryAppState.controller.popBackStack(
-                               route = Screen.Explore.route,
-                               inclusive = false
-                           )
-                        }
-                    }
-                },
             )
         },
         bottomBar = {
@@ -134,9 +129,7 @@ fun BottomBarApplication(
 fun TopBarApplication(
     currentRoute: TopBarContent,
     modifier: Modifier,
-    clickEvents: (TopIconClicked) -> Unit
 ) {
-
     Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -145,16 +138,15 @@ fun TopBarApplication(
         navigationIcon = {
             IconButton(
                 onClick = {
-                    val event = currentRoute.onTopIconClicked
-                    clickEvents(event)
+                    TopBarContent.setActive(currentRoute.route)
                 }, modifier = modifier
-                    .size(26.dp)
-                    .padding(start = 6.dp)
+                    .size(35.dp)
+                    .padding(start = 12.dp)
             ) {
                 Icon(
                     imageVector = currentRoute.imageVector ?: return@IconButton,
                     contentDescription = null,
-                    modifier = modifier.size(26.dp),
+                    modifier = modifier.size(35.dp),
                     tint = Color.White
                 )
             }

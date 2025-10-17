@@ -1,11 +1,10 @@
-package com.example.presentation.ui
+package com.example.presentation.ui.explore
 
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,18 +33,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import com.example.domain.model.Word
-import com.example.presentation.ui.ScreenManagement
+import com.example.presentation.R
 import com.example.presentation.model.FolderState
 import com.example.presentation.ui.components.AnimatedIconAndAction
 import com.example.presentation.ui.components.ExploreBottomSheet
+import com.example.presentation.ui.routes.ExploreScreenRoutes
 import com.example.presentation.viewmodel.ExplorerViewModel
 
 @Composable
 fun NavGraphBuilder.ExplorerScreen(
-    modifier: Modifier,
-    navController: NavController,
-    viewModel: ExplorerViewModel
+    modifier: Modifier, navController: NavController, viewModel: ExplorerViewModel
 ) {
     var showBottomSheet by remember {
         mutableStateOf(false)
@@ -63,7 +60,7 @@ fun NavGraphBuilder.ExplorerScreen(
             .padding(14.dp)
     ) {
         Text(
-            text = stringResource(id = com.example.presentation.R.string.my_folders),
+            text = stringResource(id = R.string.my_folders),
             fontSize = 25.sp,
             color = Color.Black,
             fontWeight = FontWeight.Bold,
@@ -89,22 +86,16 @@ fun NavGraphBuilder.ExplorerScreen(
                     modifier = modifier
                         .fillMaxWidth()
                         .height(120.dp)
-                        .combinedClickable(
-                            onClick = {
-                                navController.navigate(ScreenManagement.Word.createRoute(folder.id))
-                            },
-                            onLongClick = {
-                                longClickedFolder = folder
-                                showActionBar = true
-                            }
-                        ),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 5.dp
-                    )
-                ) {
+                        .combinedClickable(onClick = {
+                            navController.navigate(ExploreScreenRoutes.Word.createRoute(folderId = folder.id))
+                        }, onLongClick = {
+                            longClickedFolder = folder
+                            showActionBar = true
+                        }), colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                ), elevation = CardDefaults.cardElevation(
+                    defaultElevation = 5.dp
+                )) {
                     Column(modifier = modifier.padding(8.dp)) {
                         Text(
                             text = folder.name,
@@ -121,30 +112,27 @@ fun NavGraphBuilder.ExplorerScreen(
         if (showBottomSheet) {
             ExploreBottomSheet(
                 modifier = modifier, onDismiss = {
-                    showBottomSheet = false
-                },
-                createFolder = {
-                    viewModel.insertFolders(it)
-                }, id = longClickedFolder?.id ?: 0
+                showBottomSheet = false
+            }, createFolder = {
+                viewModel.insertFolders(it)
+            }, id = longClickedFolder?.id ?: 0
             )
         }
 
-        AnimatedIconAndAction(
-            modifier = modifier, visible = showActionBar,
-            onCloseClicked = {
-                showActionBar = false
-            }, onDeleteClicked = {
-                showActionBar = false
-                longClickedFolder?.let { folder ->
-                    viewModel.deleteFolders(folder)
-                }
+        AnimatedIconAndAction(modifier = modifier, visible = showActionBar, onCloseClicked = {
+            showActionBar = false
+        }, onDeleteClicked = {
+            showActionBar = false
+            longClickedFolder?.let { folder ->
+                viewModel.deleteFolders(folder)
+            }
 
-            }, onRenameClicked = {
-                showBottomSheet = true
-                showActionBar = false
+        }, onRenameClicked = {
+            showBottomSheet = true
+            showActionBar = false
 
-            }, showBottomSheet = {
-                showBottomSheet = true
-            })
+        }, showBottomSheet = {
+            showBottomSheet = true
+        })
     }
 }

@@ -15,7 +15,7 @@ android {
 }
 
 dependencies {
-    listOf(":features:explore:domain", ":core:utils").forEach {
+    listOf(":features:explore:domain", ":core:ui").forEach {
         implementation(project(it))
     }
     implementation(libs.androidx.media3.exoplayer)

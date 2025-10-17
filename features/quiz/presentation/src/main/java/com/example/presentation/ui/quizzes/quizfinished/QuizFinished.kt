@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.presentation.R
 import com.example.presentation.ui.routes.QuizScreenRoutes
+import com.example.ui.components.ApplicationButton
 
 @Composable
 fun QuizFinished(modifier: Modifier, navHostController: NavHostController) {
@@ -40,21 +41,17 @@ fun QuizFinished(modifier: Modifier, navHostController: NavHostController) {
 
         Spacer(modifier.height(8.dp))
 
-        OutlinedButton(
-            onClick = {
+        ApplicationButton(
+            modifier = modifier,
+            onClicked = {
                 navHostController.navigate(QuizScreenRoutes.Quiz.route) {
                     popUpTo(navHostController.graph.startDestinationId) {
                         inclusive = true
                     }
                 }
-            }, colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFD54F)
-            ), modifier = modifier.fillMaxWidth()
-        ) {
-            Text(
-                stringResource(id = R.string.finish_button),
-                color = Color.Black
-            )
-        }
+            },
+            text = R.string.finish_button,
+            color = 0xFFFFD54F
+        )
     }
 }

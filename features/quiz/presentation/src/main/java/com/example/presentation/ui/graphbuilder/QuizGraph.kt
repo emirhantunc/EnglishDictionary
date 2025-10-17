@@ -1,8 +1,14 @@
 package com.example.presentation.ui.graphbuilder
 
+import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -15,23 +21,41 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.presentation.ui.quizzes.flashcard.FlashCardScreen
 import com.example.presentation.ui.QuizScreen
-import com.example.presentation.ui.QuizTopIconClick
 import com.example.presentation.ui.selections.SelectionScreen
 import com.example.presentation.ui.quizzes.audio.AudioScreen
 import com.example.presentation.ui.quizzes.quizfinished.QuizFinished
 import com.example.presentation.ui.quizzes.wordmemory.WordMemoryScreen
 import com.example.presentation.ui.routes.QuizScreenRoutes
 import com.example.presentation.viewmodel.QuizViewModel
+import com.example.ui.toastMessage
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun NavGraphBuilder.QuizGraph(
-    imageVector: (ImageVector) -> Unit,
+    imageVector: (ImageVector?) -> Unit,
     modifier: Modifier,
     viewModel: QuizViewModel,
-    topIconClicked: (QuizTopIconClick) -> Unit
+    onTopClicked: () -> Boolean?,
+    onActionConsumed: () -> Unit
 ) {
     val localContext = LocalContext.current
     val navHostController: NavHostController = rememberNavController()
+    var onTopClicked by mutableStateOf(onTopClicked())
+
+    LaunchedEffect(onTopClicked) {
+        if (onTopClicked == true) {
+            try {
+                if (navHostController.previousBackStackEntry != null) {
+                    navHostController.popBackStack()
+                }
+            } catch (e: Exception) {
+                toastMessage(e.message.toString(), localContext)
+            } finally {
+                onActionConsumed()
+            }
+        }
+    }
+
     NavHost(
         navController = navHostController,
         startDestination = QuizScreenRoutes.Quiz.route,
@@ -40,6 +64,7 @@ fun NavGraphBuilder.QuizGraph(
         composable(
             route = QuizScreenRoutes.Quiz.route
         ) {
+            imageVector(null)
             QuizScreen(
                 modifier = modifier,
                 viewModel = viewModel,
@@ -58,7 +83,6 @@ fun NavGraphBuilder.QuizGraph(
                 "folderId argument is required but was not provided."
             }
             imageVector(Icons.AutoMirrored.Filled.ArrowBackIos)
-            topIconClicked(QuizTopIconClick.WordMemoryClicked)
             SelectionScreen(
                 modifier = modifier,
                 navController = navHostController,

@@ -1,6 +1,5 @@
 package com.example.ui.components
 
-import android.app.Application
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,14 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.ui.R
 
 @Composable
 fun ApplicationButton(modifier: Modifier, onClicked: () -> Unit, text: Int,color: Long) {
-
     OutlinedButton(
         onClick = {
             onClicked()

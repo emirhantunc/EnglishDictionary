@@ -2,7 +2,6 @@ package com.example.presentation.ui.routes
 
 const val FOLDER_ID = "folderId"
 
-
 sealed class QuizScreenRoutes(val route: String) {
 
     object Quiz : QuizScreenRoutes(route = "quiz")

@@ -9,72 +9,69 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Games
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.englishdictionary.R
-import com.example.presentation.ui.ExplorerScreen
-import com.example.presentation.ui.QuizTopIconClick
+import com.example.presentation.ui.graphbuilder.ExploreGraph
 import com.example.presentation.ui.graphbuilder.QuizGraph
 import com.example.presentation.ui.SearchScreen
-import com.example.presentation.ui.WordScreen
 import com.example.presentation.viewmodel.ExplorerViewModel
 import com.example.presentation.viewmodel.QuizViewModel
 import com.example.presentation.viewmodel.SearchViewModel
 
 
 sealed class Screen(val route: String) {
-    object Explore : Screen("explorer")
+    object Explore : Screen("explore_graph")
     object Search : Screen("search")
     object Quiz : Screen("quiz_graph")
-    object Word : Screen("word/{folderId}")
-}
-
-
-sealed class TopIconClicked() {
-    object WordClicked : TopIconClicked()
 }
 
 
 enum class TopBarContent(
     @StringRes val title: Int,
     val route: String,
-    var imageVector: ImageVector? = null,
-    var onTopIconClicked: TopIconClicked = TopIconClicked.WordClicked,
+    initialImageVector: ImageVector? = null,
+    initialOnTopIconClicked: Boolean? = null,
 ) {
     EXPLORE(
         title = R.string.explore_name,
         route = Screen.Explore.route,
     ),
-    WORD(
-        title = R.string.explore_name,
-        route = Screen.Word.route,
-        imageVector = Icons.Default.ArrowBackIosNew,
-        onTopIconClicked = TopIconClicked.WordClicked
-    ),
     SEARCH(
         title = R.string.search_name,
-        route = Screen.Search.route,
+        route = Screen.Search.route
     ),
     QUIZ(
         title = R.string.quiz_name,
         route = Screen.Quiz.route,
-    )
+    );
+
+    var onTopIconClicked by mutableStateOf(initialOnTopIconClicked)
+    var imageVector by mutableStateOf(initialImageVector)
+
+    companion object {
+        fun setActive(activeRoute: String?) {
+            entries.forEach { content ->
+                content.onTopIconClicked = (content.route == activeRoute)
+            }
+        }
+    }
 }
 
 enum class MainGraph(
@@ -93,11 +90,6 @@ enum class BottomItem(
         title = R.string.explore_name,
         drawerTabIcon = Icons.Default.Explore
 
-    ),
-    WORD(
-        route = Screen.Word.route,
-        title = R.string.explore_name,
-        drawerTabIcon = Icons.Default.Explore
     ),
     SEARCH(
         route = Screen.Search.route,
@@ -195,10 +187,12 @@ fun Home(
                 }
                 val quizViewModel = hiltViewModel<QuizViewModel>(parentEntry)
                 QuizGraph(
+                    onTopClicked = {
+                        TopBarContent.QUIZ.onTopIconClicked
+                    },
+                    onActionConsumed = { TopBarContent.QUIZ.onTopIconClicked = false },
                     imageVector = {
                         TopBarContent.QUIZ.imageVector = it
-                    },
-                    topIconClicked = { event ->
                     },
                     modifier = modifier,
                     viewModel = quizViewModel
@@ -232,55 +226,20 @@ fun Home(
                     )
                 },
             ) { backStackEntry ->
+
                 val parentEntry = remember(backStackEntry) {
                     appState.controller.getBackStackEntry(MainGraph.MAIN.route)
                 }
                 val exploreViewModel = hiltViewModel<ExplorerViewModel>(parentEntry)
-                ExplorerScreen(
+                ExploreGraph(
+                    imageVector = {
+                        TopBarContent.EXPLORE.imageVector = it
+                    },
                     modifier = modifier,
                     viewModel = exploreViewModel,
-                    navController = appState.controller
-                )
-            }
-            composable(
-                route = Screen.Word.route,
-                arguments = listOf(
-                    navArgument("folderId") { type = NavType.IntType }
-                ),
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(700)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(700)
-                    )
-                },
-                popEnterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(700)
-                    )
-                },
-                popExitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(700)
-                    )
-                },
-            ) { backStackEntry ->
-                val parentEntry = remember(backStackEntry) {
-                    appState.controller.getBackStackEntry(MainGraph.MAIN.route)
-                }
-                val folderId = backStackEntry.arguments?.getInt("folderId") ?: 0
-                val exploreViewModel = hiltViewModel<ExplorerViewModel>(parentEntry)
-                WordScreen(
-                    modifier = modifier,
-                    viewModel = exploreViewModel,
-                    folderId = folderId
+                    onTopClicked =
+                        { TopBarContent.EXPLORE.onTopIconClicked },
+                    onActionConsumed = { TopBarContent.EXPLORE.onTopIconClicked = false }
                 )
             }
         }

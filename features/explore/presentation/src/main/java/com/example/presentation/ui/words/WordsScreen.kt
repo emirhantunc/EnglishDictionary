@@ -1,22 +1,16 @@
-package com.example.presentation.ui
+package com.example.presentation.ui.words
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import com.example.presentation.viewmodel.ExplorerViewModel
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun NavGraphBuilder.WordScreen(
     modifier: Modifier = Modifier,
@@ -45,7 +40,6 @@ fun NavGraphBuilder.WordScreen(
     val words = viewModel.wordState.collectAsStateWithLifecycle().value
 
         LazyColumn(modifier = modifier.fillMaxSize()) {
-
             items(words) { word ->
                 Card(
                     modifier = modifier

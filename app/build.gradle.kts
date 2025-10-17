@@ -74,4 +74,5 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.navigation.animation)
+    debugImplementation (libs.leakcanary.android)
 }

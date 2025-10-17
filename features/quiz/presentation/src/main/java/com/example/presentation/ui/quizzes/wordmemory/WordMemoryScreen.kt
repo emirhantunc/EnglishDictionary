@@ -36,6 +36,7 @@ import com.example.presentation.R
 import com.example.presentation.ui.routes.QuizScreenRoutes
 import com.example.presentation.viewmodel.QuizViewModel
 import com.example.ui.ResourceStates
+import com.example.ui.components.ApplicationButton
 import com.example.ui.components.ProgressBar
 import com.example.ui.toastMessage
 
@@ -158,20 +159,14 @@ fun WordMemoryScreen(
                     ),
                 ).forEach { item ->
                     if (item.visible) {
-                        OutlinedButton(
-                            onClick = {
+                        ApplicationButton(
+                            modifier = modifier,
+                            onClicked = {
                                 item.onClick()
                             },
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight(),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(item.buttonColor)
-                            )
-                        ) {
-                            Text(text = stringResource(item.text))
-                        }
+                            text = item.text,
+                            color = item.buttonColor
+                        )
                     }
                 }
             }
