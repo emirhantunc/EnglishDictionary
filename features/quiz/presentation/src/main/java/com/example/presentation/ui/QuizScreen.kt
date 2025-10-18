@@ -58,9 +58,11 @@ fun NavGraphBuilder.QuizScreen(
                 .fillMaxWidth()
         ) {
             items(folders) { folder ->
+                viewModel.getWords(folder.id)
+
                 Card(
                     modifier = modifier
-                        .size(100.dp)
+                        .size(height = 85.dp, width = 120.dp)
                         .clickable {
                             navController.navigate(
                                 QuizScreenRoutes.Selection.createRoute(

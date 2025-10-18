@@ -4,6 +4,7 @@
     <string name="label">Give a name to your folder</string>
     <string name="my_folders">My Folders</string>
     <string name="delete_action">Delete</string>
+    <string name="quiz_collection">Quiz collection</string>
     <string name="close_action">Close</string>
     <string name="rename_action">Rename</string>
     <string name="explore">explore</string>

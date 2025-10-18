@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Games
 import androidx.compose.material.icons.filled.Search
@@ -28,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.englishdictionary.R
+import com.example.presentation.ui.CreateFolderScreen
 import com.example.presentation.ui.graphbuilder.ExploreGraph
 import com.example.presentation.ui.graphbuilder.QuizGraph
 import com.example.presentation.ui.SearchScreen
@@ -40,8 +42,8 @@ sealed class Screen(val route: String) {
     object Explore : Screen("explore_graph")
     object Search : Screen("search")
     object Quiz : Screen("quiz_graph")
+    object CreateFolder : Screen("create_folder")
 }
-
 
 enum class TopBarContent(
     @StringRes val title: Int,
@@ -60,6 +62,10 @@ enum class TopBarContent(
     QUIZ(
         title = R.string.quiz_name,
         route = Screen.Quiz.route,
+    ),
+    CREATE_FOLDER(
+        title = R.string.create_folder_name,
+        route = Screen.CreateFolder.route,
     );
 
     var onTopIconClicked by mutableStateOf(initialOnTopIconClicked)
@@ -100,7 +106,12 @@ enum class BottomItem(
         route = Screen.Quiz.route,
         title = R.string.quiz_name,
         drawerTabIcon = Icons.Default.Games
-    )
+    ),
+    CREATE_FOLDER(
+        route = Screen.Quiz.route,
+        title = R.string.create_folder_name,
+        drawerTabIcon = Icons.Default.Add
+    ),
 }
 
 @SuppressLint("ContextCastToActivity")
@@ -119,7 +130,7 @@ fun Home(
             .background(Color.White)
     ) {
         navigation(
-            startDestination = Screen.Search.route,
+            startDestination = Screen.Explore.route,
             route = MainGraph.MAIN.route
         ) {
             composable(
@@ -242,6 +253,35 @@ fun Home(
                     onActionConsumed = { TopBarContent.EXPLORE.onTopIconClicked = false }
                 )
             }
+            composable(
+                route = Screen.CreateFolder.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(700)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(700)
+                    )
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(700)
+                    )
+                },
+                popExitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(700)
+                    )
+                },
+            ) {
+                CreateFolderScreen(modifier)
+            }
         }
     }
 }
@@ -286,6 +326,12 @@ class DictionaryAppState(
     fun navigateQuiz() {
         if (route != Screen.Quiz.route) {
             controller.navigate(route = Screen.Quiz.route)
+        }
+    }
+
+    fun navigateCreateFolder() {
+        if (route != Screen.CreateFolder.route) {
+            controller.navigate(route = Screen.CreateFolder.route)
         }
     }
 }

@@ -14,8 +14,6 @@ import javax.inject.Inject
 class WordListRepositoryImpl @Inject constructor
     (private val dao: DictionaryDao) :
     ExploreRepository {
-
-
     override  fun getFolders(): Flow<List<Folder>> {
         return dao.getAllFolders().map { list ->
             list.toFolderList()

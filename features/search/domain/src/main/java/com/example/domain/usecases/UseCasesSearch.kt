@@ -7,5 +7,5 @@ import com.example.domain.usecases.room.InsertWordUseCase
 data class UseCasesSearch(
     val getWordMeaningUseCase: GetWordMeaningUseCase,
     val insertWordUseCase: InsertWordUseCase,
-    val getAllFoldersUseCase: GetAllFoldersUseCase
+    val getAllFoldersUseCase: GetAllFoldersUseCase,
 )

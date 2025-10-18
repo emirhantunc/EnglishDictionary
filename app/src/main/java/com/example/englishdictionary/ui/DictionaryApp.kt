@@ -74,20 +74,26 @@ fun BottomBarApplication(
 ) {
     val list: List<BottomItems> = listOf(
         BottomItems(
-            BottomItem.SEARCH.drawerTabIcon,
-            BottomItem.SEARCH.title,
-            onClick = { dictionaryAppState.navigateSearch() },
-            bottomItem = BottomItem.SEARCH
-        ),
-        BottomItems(
-            BottomItem.EXPLORE.drawerTabIcon,
-            BottomItem.EXPLORE.title,
+            icon = BottomItem.EXPLORE.drawerTabIcon,
+            name = BottomItem.EXPLORE.title,
             onClick = { dictionaryAppState.navigateToExplorer() },
             bottomItem = BottomItem.EXPLORE
         ),
         BottomItems(
-            BottomItem.QUIZ.drawerTabIcon,
-            BottomItem.QUIZ.title,
+            icon = BottomItem.SEARCH.drawerTabIcon,
+            name = BottomItem.SEARCH.title,
+            onClick = { dictionaryAppState.navigateSearch() },
+            bottomItem = BottomItem.SEARCH
+        ),
+        BottomItems(
+            icon = BottomItem.CREATE_FOLDER.drawerTabIcon,
+            name = BottomItem.CREATE_FOLDER.title,
+            onClick = { dictionaryAppState.navigateCreateFolder() },
+            bottomItem = BottomItem.CREATE_FOLDER
+        ),
+        BottomItems(
+            icon = BottomItem.QUIZ.drawerTabIcon,
+            name = BottomItem.QUIZ.title,
             onClick = { dictionaryAppState.navigateQuiz() },
             bottomItem = BottomItem.QUIZ
         )
@@ -118,7 +124,9 @@ fun BottomBarApplication(
                 },
                 selected = item.bottomItem == selectedItem,
                 onClick = item.onClick,
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
+                    .weight(1f),
             )
         }
     }

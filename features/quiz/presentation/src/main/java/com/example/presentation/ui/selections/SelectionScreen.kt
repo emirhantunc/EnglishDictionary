@@ -44,7 +44,6 @@ fun NavGraphBuilder.SelectionScreen(
     folderId: Int,
     navController: NavHostController
 ) {
-    Log.d("FolderId", folderId.toString())
     val list: List<Selections> = listOf(
         Selections(
             selection = R.string.word_memory,

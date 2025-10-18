@@ -47,13 +47,13 @@ fun NavGraphBuilder.SearchScreen(
                 SaveBottomSheet(modifier = modifier, folders = folders, onDismiss = {
                     showBottomSheet = false
                 }, folderSelected = { id ->
-                    viewModel.insertWord(it.word, id, it.definition,it.audioUrl)
+                    viewModel.insertWord(it.word, id, it.definition, it.audioUrl)
                 })
             }
         }
 
         SearchTextField(modifier = modifier, search = { word ->
-            viewModel.getWordMeaning(word)
+            viewModel.getWordMeaning(word, context = context)
 
         }, wordList = wordState)
         Spacer(modifier = modifier.height(15.dp))

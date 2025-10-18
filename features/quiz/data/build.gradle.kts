@@ -10,7 +10,7 @@ android {
 
 dependencies {
     listOf(
-        ":features:quiz:domain",":core:data"
+        ":features:quiz:domain",":core:data",":core:utils"
     ).forEach {
         implementation(project(it))
     }

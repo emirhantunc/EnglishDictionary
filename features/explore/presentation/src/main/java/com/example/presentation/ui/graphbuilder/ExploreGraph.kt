@@ -61,6 +61,8 @@ fun NavGraphBuilder.ExploreGraph(
         composable(
             route = ExploreScreenRoutes.Explore.route
         ) {
+            imageVector(null)
+
             ExplorerScreen(
                 modifier = modifier,
                 navController = navHostController,

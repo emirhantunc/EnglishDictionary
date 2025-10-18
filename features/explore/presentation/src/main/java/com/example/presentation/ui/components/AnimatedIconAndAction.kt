@@ -54,39 +54,9 @@ fun ColumnScope.AnimatedIconAndAction(
     visible: Boolean,
     onCloseClicked: () -> Unit,
     onRenameClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
-    showBottomSheet: () -> Unit,
-
+    onDeleteClicked: () -> Unit
     ) {
 
-    val iconVerticalPadding by animateDpAsState(
-        targetValue = if (visible) 30.dp else 5.dp,
-        animationSpec = tween(durationMillis = 300)
-    )
-
-    Box(
-        modifier = modifier
-            .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(end = 10.dp, bottom = iconVerticalPadding),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        IconButton(
-            onClick = {
-                showBottomSheet()
-            },
-            modifier = modifier.size(65.dp),
-            shape = CircleShape,
-            colors = IconButtonDefaults.iconButtonColors(Color(0xFFFFD54F))
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                tint = Color.White,
-                contentDescription = null,
-                modifier = modifier.size(35.dp)
-            )
-        }
-    }
     val actionItems: List<ActionBarItem> = listOf(
         ActionBarItem(
             imageVector = Icons.Default.Close,
@@ -107,6 +77,7 @@ fun ColumnScope.AnimatedIconAndAction(
             onClick = { onRenameClicked() }
         ),
     )
+
     AnimatedVisibility(
         visible = visible,
         enter = slideInVertically(

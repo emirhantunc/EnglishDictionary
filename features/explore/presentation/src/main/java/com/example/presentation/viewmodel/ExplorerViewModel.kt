@@ -21,16 +21,16 @@ class ExplorerViewModel @Inject constructor(
     private val useCases: UseCasesExplore
 ) : ViewModel() {
 
+    init {
+        getFolders()
+    }
+
     private val _folderState = MutableStateFlow<List<FolderState>>(emptyList())
     private val _wordState = MutableStateFlow<List<WordState>>(emptyList())
 
     val folderState: StateFlow<List<FolderState>> = _folderState
     val wordState: StateFlow<List<WordState>> = _wordState
 
-
-    init {
-        getFolders()
-    }
 
     fun insertFolders(folder: FolderState) {
         viewModelScope.launch {

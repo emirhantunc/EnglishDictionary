@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    listOf(":features:explore:domain", ":core:data").forEach {
+    listOf(":features:explore:domain", ":core:data",":core:utils").forEach {
         implementation(project(it))
     }
 }

@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecases.UseCasesSearch
@@ -15,6 +16,7 @@ import com.example.presentation.model.network.WordState
 import com.example.presentation.model.room.FolderRoomState
 import com.example.presentation.model.room.WordRoomPresentation
 import com.example.ui.ResourceStates
+import com.example.utils.isInternetAvailable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -46,38 +48,22 @@ class SearchViewModel @Inject constructor(
         )
     val resourceStates: StateFlow<ResourceStates> = _resourceStates
 
-
-    fun getWordMeaning(word: String) {
+    fun getWordMeaning(word: String, context: Context) {
         viewModelScope.launch {
-            try {
-                _resourceStates.value = ResourceStates.Loading
-                _wordState.update {
-                    useCases.getWordMeaningUseCase(word = word).toWordStateList()
+            if (context.isInternetAvailable()) {
+                try {
+                    _resourceStates.value = ResourceStates.Loading
+                    _wordState.update {
+                        useCases.getWordMeaningUseCase(word = word).toWordStateList()
+                    }
+                    _resourceStates.value = ResourceStates.Success
+                } catch (e: Exception) {
+                    _resourceStates.value = ResourceStates.Error(e.toString())
+                    e.printStackTrace()
                 }
-                _resourceStates.value = ResourceStates.Success
-            } catch (e: Exception) {
-                _resourceStates.value = ResourceStates.Error(e.toString())
-                e.printStackTrace()
+            } else {
+                _resourceStates.value = ResourceStates.Error("Check Your Internet Connection")
             }
-        }
-    }
-
-    fun listenAudio(context: Context, url: String) {
-        val mediaPlayer = MediaPlayer()
-        mediaPlayer.setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
-        )
-
-        try {
-            mediaPlayer.setDataSource(context, Uri.parse(url))
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener { mp ->
-                mp.start()
-            }
-        } catch (e: IOException) {
-            Log.d("audioException", e.toString())
         }
     }
 
@@ -99,7 +85,6 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
-
     fun getAllFolders() {
         viewModelScope.launch {
             try {

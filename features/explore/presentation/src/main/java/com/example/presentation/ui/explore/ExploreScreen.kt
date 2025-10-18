@@ -10,13 +10,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,17 +29,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.example.presentation.R
 import com.example.presentation.model.FolderState
+import com.example.presentation.model.WordState
 import com.example.presentation.ui.components.AnimatedIconAndAction
 import com.example.presentation.ui.components.ExploreBottomSheet
 import com.example.presentation.ui.routes.ExploreScreenRoutes
@@ -50,8 +58,15 @@ fun NavGraphBuilder.ExplorerScreen(
 
     var showActionBar by remember { mutableStateOf(false) }
     val folders = viewModel.folderState.collectAsStateWithLifecycle().value
-    var longClickedFolder by remember { mutableStateOf<FolderState?>(null) }
 
+    LaunchedEffect(folders) {
+        if (folders.isNotEmpty()) {
+            viewModel.getWords(folderId = folders.random().id)
+        }
+    }
+    var longClickedFolder by remember { mutableStateOf<FolderState?>(null) }
+    val collectionList =
+        listOf<String>("Animals", "Traveling", "Sport") // just for ui design. Not a real list
 
     Column(
         modifier = modifier
@@ -61,9 +76,9 @@ fun NavGraphBuilder.ExplorerScreen(
     ) {
         Text(
             text = stringResource(id = R.string.my_folders),
-            fontSize = 25.sp,
+            fontSize = 18.sp,
             color = Color.Black,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Black,
             fontFamily = FontFamily.Default,
             fontStyle = FontStyle.Normal,
             textAlign = TextAlign.Start
@@ -71,31 +86,28 @@ fun NavGraphBuilder.ExplorerScreen(
 
         Spacer(modifier = modifier.height(5.dp))
 
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        LazyRow(
             modifier = Modifier
-                .weight(1f)
                 .background(Color.White)
                 .padding(start = 7.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(folders) { folder ->
                 Card(
                     modifier = modifier
                         .fillMaxWidth()
-                        .height(120.dp)
+                        .size(height = 85.dp, width = 120.dp)
                         .combinedClickable(onClick = {
                             navController.navigate(ExploreScreenRoutes.Word.createRoute(folderId = folder.id))
                         }, onLongClick = {
                             longClickedFolder = folder
                             showActionBar = true
                         }), colors = CardDefaults.cardColors(
-                    containerColor = Color.White
-                ), elevation = CardDefaults.cardElevation(
-                    defaultElevation = 5.dp
-                )) {
+                        containerColor = Color.White
+                    ), elevation = CardDefaults.cardElevation(
+                        defaultElevation = 5.dp
+                    )
+                ) {
                     Column(modifier = modifier.padding(8.dp)) {
                         Text(
                             text = folder.name,
@@ -108,16 +120,86 @@ fun NavGraphBuilder.ExplorerScreen(
             }
         }
 
+        Spacer(modifier = modifier.height(10.dp))
 
-        if (showBottomSheet) {
-            ExploreBottomSheet(
-                modifier = modifier, onDismiss = {
-                showBottomSheet = false
-            }, createFolder = {
-                viewModel.insertFolders(it)
-            }, id = longClickedFolder?.id ?: 0
-            )
+        Text(
+            text = stringResource(id = R.string.quiz_collection),
+            fontSize = 18.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Black,
+            fontFamily = FontFamily.Default,
+            fontStyle = FontStyle.Normal,
+            textAlign = TextAlign.Start
+        )
+
+        Spacer(modifier = modifier.height(3.dp))
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+
+        ) {
+            items(collectionList) {
+                Card(
+                    modifier = modifier.size(height = 85.dp, width = 120.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFFFD54F)
+                    )
+                ) {
+                    Text(
+                        text = it,
+                        fontSize = 15.sp,
+                        color = Color.White,
+                        modifier = modifier.padding(horizontal = 6.dp, vertical = 6.dp)
+                    )
+                }
+            }
         }
+        Spacer(modifier = modifier.height(5.dp))
+
+
+        if (folders.isNotEmpty()) {
+            val word = viewModel.wordState.collectAsStateWithLifecycle().value
+            val randomWord = word.randomOrNull()
+
+            if (randomWord != null) {
+                Text(
+                    text = randomWord.word,
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Black,
+                    fontFamily = FontFamily.Default,
+                    fontStyle = FontStyle.Normal,
+                    textAlign = TextAlign.Start
+                )
+
+                Spacer(modifier = modifier.height(5.dp))
+
+                Card(
+                    modifier = modifier
+                        .height(175.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0x80E7FDFE)
+                    ),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = randomWord.definition, style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Italic
+                        ), modifier = modifier.padding(
+                            start = 16.dp, bottom = 8.dp, top = 4.dp
+                        )
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = modifier.weight(1f))
 
         AnimatedIconAndAction(modifier = modifier, visible = showActionBar, onCloseClicked = {
             showActionBar = false
@@ -131,8 +213,16 @@ fun NavGraphBuilder.ExplorerScreen(
             showBottomSheet = true
             showActionBar = false
 
-        }, showBottomSheet = {
-            showBottomSheet = true
         })
+
+        if (showBottomSheet) {
+            ExploreBottomSheet(
+                modifier = modifier, onDismiss = {
+                    showBottomSheet = false
+                }, createFolder = {
+                    viewModel.insertFolders(it)
+                }, id = longClickedFolder?.id ?: 0
+            )
+        }
     }
 }

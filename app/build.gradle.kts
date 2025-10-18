@@ -51,7 +51,9 @@ dependencies {
         ":features:explore:data",
         ":features:explore:presentation",
         ":features:quiz:presentation",
+        ":features:createfolder:presentation",
         ":features:quiz:data",
+        ":features:createfolder:data",
         ":core:ui"
     ).forEach {
         implementation(project(it))
