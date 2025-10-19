@@ -1,11 +1,11 @@
 package com.example.data.impl
 
 import com.example.data.mapper.toFolder
+import com.example.data.mapper.toFolderWithCountList
 import com.example.data.room.dao.DictionaryDao
-import com.example.data.mapper.toFolderList
-import com.example.data.mapper.toWord
 import com.example.data.mapper.toWordList
 import com.example.domain.model.QuizFolder
+import com.example.domain.model.QuizFolderWithCount
 import com.example.domain.model.QuizWord
 import com.example.domain.repository.QuizRepository
 import kotlinx.coroutines.flow.map
@@ -16,9 +16,9 @@ class QuizRepositoryImpl @Inject constructor(
     private val dao: DictionaryDao
 ) : QuizRepository {
 
-    override fun getQuizFolders(): Flow<List<QuizFolder>> {
+    override fun getQuizFolders(): Flow<List<QuizFolderWithCount>> {
         return dao.getAllFolders().map { folder ->
-            folder.toFolderList()
+            folder.toFolderWithCountList()
         }
     }
 

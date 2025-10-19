@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.presentation.viewmodel.SearchViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
-import com.example.presentation.model.room.WordRoomPresentation
+import com.example.presentation.model.room.SearchWordPresentation
 import com.example.presentation.ui.components.SearchTextField
 import com.example.presentation.ui.response.ResponseScreen
 
@@ -32,7 +32,7 @@ fun NavGraphBuilder.SearchScreen(
     val wordState = viewModel.wordState.collectAsStateWithLifecycle().value
     val resourceStates = viewModel.resourceStates.collectAsStateWithLifecycle().value
     var showBottomSheet by remember { mutableStateOf(false) }
-    var wordRoomPresentation by remember { mutableStateOf<WordRoomPresentation?>(null) }
+    var searchWordPresentation by remember { mutableStateOf<SearchWordPresentation?>(null) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -43,7 +43,7 @@ fun NavGraphBuilder.SearchScreen(
         if (showBottomSheet) {
             val folders = viewModel.folderList.collectAsStateWithLifecycle().value
 
-            wordRoomPresentation?.let { it ->
+            searchWordPresentation?.let { it ->
                 SaveBottomSheet(modifier = modifier, folders = folders, onDismiss = {
                     showBottomSheet = false
                 }, folderSelected = { id ->
@@ -63,7 +63,7 @@ fun NavGraphBuilder.SearchScreen(
             resourceStates = resourceStates,
             wordState = wordState,
             bottomSheet = { item ->
-                wordRoomPresentation = item
+                searchWordPresentation = item
                 showBottomSheet = true
             })
     }

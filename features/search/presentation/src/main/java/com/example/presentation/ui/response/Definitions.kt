@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import com.example.presentation.R
 import com.example.presentation.model.network.DefinitionState
-import com.example.presentation.model.room.WordRoomPresentation
+import com.example.presentation.model.room.SearchWordPresentation
 
 @Composable
 fun Definitions(
     modifier: Modifier = Modifier,
     definitions: List<DefinitionState>,
-    bottomSheet: (WordRoomPresentation) -> Unit
+    bottomSheet: (SearchWordPresentation) -> Unit
 ) {
 
     definitions.fastForEach { definition ->
@@ -84,7 +84,7 @@ fun Definitions(
                 Button(
                     onClick = {
                         bottomSheet(
-                            WordRoomPresentation(
+                            SearchWordPresentation(
                                 id = 0,
                                 word = "word",
                                 folderId = 0,

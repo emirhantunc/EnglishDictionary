@@ -4,5 +4,5 @@ data class UseCasesExplore(
     val getWordsUseCase: GetWordsUseCase,
     val getFoldersUseCase: GetFoldersUseCase,
     val insertFoldersUseCase: InsertFolderUseCase,
-    val deleteFolderUseCase: DeleteFolderUseCase
+    val deleteFolderUseCase: DeleteFolderUseCase,
 )

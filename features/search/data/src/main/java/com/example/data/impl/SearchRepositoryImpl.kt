@@ -1,13 +1,14 @@
 package com.example.data.impl
 
-import com.example.data.mapper.toFolderRoomList
 import com.example.data.mapper.toWordList
 import com.example.data.mapper.toWordModel
+import com.example.data.mapper.totoFolderWithCountList
 import com.example.data.network.service.DictionaryApi
 import com.example.data.room.dao.DictionaryDao
 import com.example.domain.model.network.Word
-import com.example.domain.model.room.FolderRoom
-import com.example.domain.model.room.WordRoom
+import com.example.domain.model.room.SearchFolder
+import com.example.domain.model.room.SearchFolderWithCount
+import com.example.domain.model.room.SearchRoom
 import com.example.domain.repository.SearchRepository
 import com.example.utils.HttpStatus
 import kotlinx.coroutines.flow.Flow
@@ -29,13 +30,13 @@ class SearchRepositoryImpl @Inject constructor(
         throw Exception(errorMessage)
     }
 
-    override suspend fun insertMeaning(wordRoom: WordRoom) {
-        dao.insertMeaning(wordModel = wordRoom.toWordModel())
+    override suspend fun insertMeaning(searchRoom: SearchRoom) {
+        dao.insertMeaning(wordModel = searchRoom.toWordModel())
     }
 
-    override fun getAllFolders(): Flow<List<FolderRoom>> {
+    override fun getAllFolders(): Flow<List<SearchFolderWithCount>> {
         return dao.getAllFolders().map { list ->
-            list.toFolderRoomList()
+            list.totoFolderWithCountList()
         }
     }
 }

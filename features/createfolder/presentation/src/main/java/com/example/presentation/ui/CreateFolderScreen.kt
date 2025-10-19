@@ -85,6 +85,7 @@ fun CreateFolderScreen(
             modifier = modifier,
             onClicked = {
                 viewModel.createFolder(CreateFolderPresentation(id = 0, name = name))
+                name = ""
             },
             text = R.string.btn_txt,
             color = 0x00000000

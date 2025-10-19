@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ApplicationButton(modifier: Modifier, onClicked: () -> Unit, text: Int,color: Long) {
+fun ApplicationButton(modifier: Modifier, onClicked: () -> Unit, text: Int, color: Long) {
     OutlinedButton(
         onClick = {
             onClicked()
@@ -26,7 +26,7 @@ fun ApplicationButton(modifier: Modifier, onClicked: () -> Unit, text: Int,color
         shape = RoundedCornerShape(8.dp)
     ) {
         Text(
-            stringResource(id = text)
+            stringResource(id = text), color = Color.Black
         )
     }
 }

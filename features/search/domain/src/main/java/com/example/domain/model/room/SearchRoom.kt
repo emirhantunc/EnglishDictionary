@@ -1,6 +1,6 @@
 package com.example.domain.model.room
 
-data class WordRoom(
+data class SearchRoom(
     val id: Int = 0,
     val word: String,
     val folderId: Int,

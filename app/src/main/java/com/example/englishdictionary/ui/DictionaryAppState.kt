@@ -108,7 +108,7 @@ enum class BottomItem(
         drawerTabIcon = Icons.Default.Games
     ),
     CREATE_FOLDER(
-        route = Screen.Quiz.route,
+        route = Screen.CreateFolder.route,
         title = R.string.create_folder_name,
         drawerTabIcon = Icons.Default.Add
     ),

@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.presentation.model.network.WordState
-import com.example.presentation.model.room.WordRoomPresentation
+import com.example.presentation.model.room.SearchWordPresentation
 import com.example.ui.ResourceStates
 import com.example.ui.components.ProgressBar
 import com.example.ui.toastMessage
@@ -35,7 +33,7 @@ fun ResponseScreen(
     context: Context,
     resourceStates: ResourceStates,
     wordState: List<WordState>,
-    bottomSheet: (WordRoomPresentation) -> Unit
+    bottomSheet: (SearchWordPresentation) -> Unit
 ) {
     val flingBehavior = remember {
         object : FlingBehavior {
@@ -93,7 +91,7 @@ fun ResponseScreen(
                         definitions = meaning.definitions,
                         bottomSheet = { it ->
                             bottomSheet(
-                                WordRoomPresentation(
+                                SearchWordPresentation(
                                     id = 0,
                                     word = wordState.first().word,
                                     folderId = 0,

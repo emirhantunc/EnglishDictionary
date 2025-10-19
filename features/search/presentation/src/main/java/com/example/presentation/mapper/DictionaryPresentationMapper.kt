@@ -4,14 +4,16 @@ import com.example.domain.model.network.Definitions
 import com.example.domain.model.network.Meanings
 import com.example.domain.model.network.Phonetic
 import com.example.domain.model.network.Word
-import com.example.domain.model.room.FolderRoom
-import com.example.domain.model.room.WordRoom
+import com.example.domain.model.room.SearchFolder
+import com.example.domain.model.room.SearchFolderWithCount
+import com.example.domain.model.room.SearchRoom
 import com.example.presentation.model.network.DefinitionState
 import com.example.presentation.model.network.MeaningState
 import com.example.presentation.model.network.PhoneticState
 import com.example.presentation.model.network.WordState
-import com.example.presentation.model.room.FolderRoomState
-import com.example.presentation.model.room.WordRoomPresentation
+import com.example.presentation.model.room.SearchFolderState
+import com.example.presentation.model.room.SearchFolderWithCountState
+import com.example.presentation.model.room.SearchWordPresentation
 
 fun Phonetic.toPhoneticState(): PhoneticState {
     return PhoneticState(
@@ -59,8 +61,8 @@ fun List<Word>.toWordStateList(): List<WordState> {
     return this.map { it.toWordState() }
 }
 
-fun WordRoomPresentation.toWordRoom(): WordRoom {
-    return WordRoom(
+fun SearchWordPresentation.toWordRoom(): SearchRoom {
+    return SearchRoom(
         id = id,
         word = word,
         folderId = folderId,
@@ -69,13 +71,21 @@ fun WordRoomPresentation.toWordRoom(): WordRoom {
     )
 }
 
-fun FolderRoom.toFolderRoomState(): FolderRoomState {
-    return FolderRoomState(
+fun SearchFolder.toFolderRoomState(): SearchFolderState {
+    return SearchFolderState(
         id = id,
         name = name
     )
 }
 
-fun List<FolderRoom>.toFolderRoomStateList(): List<FolderRoomState> {
-    return this.map { it.toFolderRoomState() }
+fun SearchFolderWithCount.toSearchFolderWithCountState(): SearchFolderWithCountState {
+    return SearchFolderWithCountState(
+        folder = folder.toFolderRoomState(),
+        wordCount = 0
+    )
+}
+
+fun List<SearchFolderWithCount>.toSearchFolderWithCountStateList():
+        List<SearchFolderWithCountState> {
+    return this.map { it.toSearchFolderWithCountState() }
 }

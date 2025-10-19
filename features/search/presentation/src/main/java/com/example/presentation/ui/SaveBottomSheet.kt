@@ -33,14 +33,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.presentation.R
-import com.example.presentation.model.room.FolderRoomState
+import com.example.presentation.model.room.SearchFolderState
+import com.example.presentation.model.room.SearchFolderWithCountState
 import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun ColumnScope.SaveBottomSheet(
     onDismiss: () -> Unit,
-    folders: List<FolderRoomState>,
+    folders: List<SearchFolderWithCountState>,
     folderSelected: (Int) -> Unit,
     modifier: Modifier
 ) {
@@ -79,7 +80,7 @@ fun ColumnScope.SaveBottomSheet(
                             .height(110.dp)
                             .width(130.dp)
                             .clickable {
-                                folderSelected(folder.id)
+                                folderSelected(folder.folder.id)
                                 scope.launch { sheetState.hide() }.invokeOnCompletion {
                                     if (!sheetState.isVisible) {
                                         onDismiss()
@@ -94,7 +95,7 @@ fun ColumnScope.SaveBottomSheet(
                         )
                     ) {
                         Text(
-                            text = folder.name,
+                            text = folder.folder.name,
                             fontSize = 12.sp,
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,

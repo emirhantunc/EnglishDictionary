@@ -1,8 +1,10 @@
 package com.example.data.mapper
 
 import com.example.data.room.model.FolderModel
+import com.example.data.room.model.FolderModelWithWordCount
 import com.example.data.room.model.WordModel
 import com.example.domain.model.QuizFolder
+import com.example.domain.model.QuizFolderWithCount
 import com.example.domain.model.QuizWord
 
 fun FolderModel.toFolder(): QuizFolder {
@@ -12,8 +14,15 @@ fun FolderModel.toFolder(): QuizFolder {
     )
 }
 
-fun List<FolderModel>.toFolderList(): List<QuizFolder> {
-    return this.map { it.toFolder() }
+fun FolderModelWithWordCount.toFolderWithCount(): QuizFolderWithCount {
+    return QuizFolderWithCount(
+        folder = folder.toFolder(),
+        wordCount = wordCount
+    )
+}
+
+fun List<FolderModelWithWordCount>.toFolderWithCountList(): List<QuizFolderWithCount> {
+    return this.map { it.toFolderWithCount() }
 }
 
 fun WordModel.toWord(): QuizWord {

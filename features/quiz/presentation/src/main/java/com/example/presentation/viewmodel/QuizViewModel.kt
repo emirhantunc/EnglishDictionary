@@ -3,17 +3,11 @@ package com.example.presentation.viewmodel
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.usecases.GetQuizFoldersUseCase
 import com.example.domain.usecases.QuizUseCases
 import com.example.presentation.mapper.toFolderState
-import com.example.presentation.mapper.toFolderStateList
 import com.example.presentation.mapper.toWordStateList
 import com.example.presentation.model.QuizFolderState
 import com.example.presentation.model.QuizWordState
@@ -28,21 +22,23 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 import androidx.core.net.toUri
+import com.example.presentation.mapper.toFolderStateWithCountList
+import com.example.presentation.model.QuizFolderWithCountState
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
     private val quizUseCases: QuizUseCases
 ) : ViewModel() {
 
-    private val _foldersState = MutableStateFlow<List<QuizFolderState>>(emptyList())
+    private val _foldersState = MutableStateFlow<List<QuizFolderWithCountState>>(emptyList())
     private val _selectedFolderState = MutableStateFlow<QuizFolderState?>(null)
     private val _wordsState = MutableStateFlow<List<QuizWordState>>(emptyList())
     private val _resourceStates = MutableStateFlow<ResourceStates>(ResourceStates.Initial)
-    val foldersState: StateFlow<List<QuizFolderState>> =
+    val foldersState: StateFlow<List<QuizFolderWithCountState>> =
         _foldersState.onStart { getAllFolders() }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            emptyList<QuizFolderState>()
+            emptyList<QuizFolderWithCountState>()
         )
     val selectedFolderState: StateFlow<QuizFolderState?> = _selectedFolderState
     val wordsStates: StateFlow<List<QuizWordState>> = _wordsState
@@ -53,7 +49,7 @@ class QuizViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 quizUseCases.getQuizFoldersUseCase().collect { folder ->
-                    _foldersState.value = folder.toFolderStateList()
+                    _foldersState.value = folder.toFolderStateWithCountList()
                 }
             } catch (e: Exception) {
                 Log.d("quiz exception: ", e.toString())

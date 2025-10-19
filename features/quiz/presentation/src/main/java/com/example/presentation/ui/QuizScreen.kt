@@ -37,7 +37,8 @@ fun NavGraphBuilder.QuizScreen(
     viewModel: QuizViewModel,
     navController: NavController
 ) {
-    val folders = viewModel.foldersState.collectAsStateWithLifecycle().value
+    val folders =
+        viewModel.foldersState.collectAsStateWithLifecycle().value.filter { it.wordCount != 0 }
 
     Column(
         modifier = modifier
@@ -47,9 +48,9 @@ fun NavGraphBuilder.QuizScreen(
     ) {
         Text(
             text = stringResource(id = R.string.my_folder),
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             color = Color.Black,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Black,
             fontFamily = FontFamily.Default
         )
         Spacer(modifier.height(10.dp))
@@ -58,32 +59,25 @@ fun NavGraphBuilder.QuizScreen(
                 .fillMaxWidth()
         ) {
             items(folders) { folder ->
-                viewModel.getWords(folder.id)
+                viewModel.getWords(folder.folder.id)
 
                 Card(
                     modifier = modifier
                         .size(height = 85.dp, width = 120.dp)
                         .clickable {
-                            navController.navigate(
-                                QuizScreenRoutes.Selection.createRoute(
-                                    folderId = folder.id
-                                )
-                            )
+                            navController.navigate(QuizScreenRoutes.Selection.createRoute(folderId = folder.folder.id))
                         },
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.White,
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 5.dp
-                    ),
-                    shape = RoundedCornerShape(4.dp)
+                        containerColor = Color(0xFFFFD54F)
+                    )
                 ) {
                     Text(
-                        text = folder.name,
+                        text = folder.folder.name,
                         fontSize = 14.sp,
-                        color = Color.Black,
+                        color = Color.White,
                         fontWeight = FontWeight.Normal,
-                        fontFamily = FontFamily.Default
+                        fontFamily = FontFamily.Default,
+                        modifier = modifier.padding(horizontal = 6.dp, vertical = 6.dp)
                     )
                 }
                 Spacer(modifier = modifier.width(5.dp))

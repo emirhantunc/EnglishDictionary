@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -60,10 +61,12 @@ fun NavGraphBuilder.ExplorerScreen(
     val folders = viewModel.folderState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(folders) {
-        if (folders.isNotEmpty()) {
-            viewModel.getWords(folderId = folders.random().id)
+        val foldersWithWords = folders.filter { it.wordCount > 0 }
+        if (foldersWithWords.isNotEmpty()) {
+            viewModel.getWords(foldersWithWords.random().folderState.id)
         }
     }
+
     var longClickedFolder by remember { mutableStateOf<FolderState?>(null) }
     val collectionList =
         listOf<String>("Animals", "Traveling", "Sport") // just for ui design. Not a real list
@@ -98,9 +101,9 @@ fun NavGraphBuilder.ExplorerScreen(
                         .fillMaxWidth()
                         .size(height = 85.dp, width = 120.dp)
                         .combinedClickable(onClick = {
-                            navController.navigate(ExploreScreenRoutes.Word.createRoute(folderId = folder.id))
+                            navController.navigate(ExploreScreenRoutes.Word.createRoute(folderId = folder.folderState.id))
                         }, onLongClick = {
-                            longClickedFolder = folder
+                            longClickedFolder = folder.folderState
                             showActionBar = true
                         }), colors = CardDefaults.cardColors(
                         containerColor = Color.White
@@ -110,7 +113,7 @@ fun NavGraphBuilder.ExplorerScreen(
                 ) {
                     Column(modifier = modifier.padding(8.dp)) {
                         Text(
-                            text = folder.name,
+                            text = folder.folderState.name,
                             fontSize = 15.sp,
                             color = Color.Black,
                             fontWeight = FontWeight.Bold
@@ -159,42 +162,47 @@ fun NavGraphBuilder.ExplorerScreen(
 
         if (folders.isNotEmpty()) {
             val word = viewModel.wordState.collectAsStateWithLifecycle().value
-            val randomWord = word.randomOrNull()
-
-            if (randomWord != null) {
-                Text(
-                    text = randomWord.word,
-                    fontSize = 18.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Black,
-                    fontFamily = FontFamily.Default,
-                    fontStyle = FontStyle.Normal,
-                    textAlign = TextAlign.Start
-                )
-
-                Spacer(modifier = modifier.height(5.dp))
-
+            if (word.isNotEmpty()) {
                 Card(
                     modifier = modifier
                         .height(175.dp)
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
+                        .fillMaxWidth(),
                     colors = CardDefaults.cardColors(
                         containerColor = Color(0x80E7FDFE)
                     ),
                     shape = RoundedCornerShape(4.dp)
                 ) {
                     Text(
-                        text = randomWord.definition, style = TextStyle(
-                            color = Color.Black,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Italic
-                        ), modifier = modifier.padding(
-                            start = 16.dp, bottom = 8.dp, top = 4.dp
+                        text = word.first().word,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily.Default,
+                        fontStyle = FontStyle.Normal,
+                        textAlign = TextAlign.Start,
+                        modifier = modifier.padding(
+                            horizontal = 12.dp, vertical = 8.dp
                         )
                     )
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(word) {
+                            Text(
+                                text = it.definition, style = TextStyle(
+                                    color = Color.Black,
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Start,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Italic
+                                ), modifier = modifier.padding(
+                                    horizontal = 16.dp, vertical = 8.dp
+                                )
+                            )
+                        }
+
+                    }
+                    Spacer(modifier = modifier.height(5.dp))
                 }
             }
         }

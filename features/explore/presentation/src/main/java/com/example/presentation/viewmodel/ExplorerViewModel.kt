@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecases.UseCasesExplore
 import com.example.presentation.mapper.toFolder
-import com.example.presentation.mapper.toFolderStateList
+import com.example.presentation.mapper.toFolderWithCountStateList
 import com.example.presentation.mapper.toWordStateList
 import com.example.presentation.model.FolderState
+import com.example.presentation.model.FolderWithCountState
 import com.example.presentation.model.WordState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,12 +24,13 @@ class ExplorerViewModel @Inject constructor(
 
     init {
         getFolders()
+        getFoldersWithWord()
     }
 
-    private val _folderState = MutableStateFlow<List<FolderState>>(emptyList())
+    private val _folderState = MutableStateFlow<List<FolderWithCountState>>(emptyList())
     private val _wordState = MutableStateFlow<List<WordState>>(emptyList())
 
-    val folderState: StateFlow<List<FolderState>> = _folderState
+    val folderState: StateFlow<List<FolderWithCountState>> = _folderState
     val wordState: StateFlow<List<WordState>> = _wordState
 
 
@@ -49,7 +51,7 @@ class ExplorerViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 useCases.getFoldersUseCase().collect { folders ->
-                    _folderState.value = folders.toFolderStateList()
+                    _folderState.value = folders.toFolderWithCountStateList()
                 }
 
             } catch (e: Exception) {
@@ -57,6 +59,18 @@ class ExplorerViewModel @Inject constructor(
             }
 
 
+        }
+    }
+
+    fun getFoldersWithWord() {
+        viewModelScope.launch {
+            try {
+                useCases.getFoldersUseCase().collect { folders ->
+                    _folderState.value = folders.toFolderWithCountStateList()
+                }
+            } catch (e: Exception) {
+                Log.d("exception", e.message.toString())
+            }
         }
     }
 
