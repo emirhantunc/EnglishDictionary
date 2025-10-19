@@ -42,10 +42,11 @@ fun ExploreBottomSheet(
     modifier: Modifier,
     onDismiss: () -> Unit,
     createFolder: (FolderState) -> Unit,
+    folderName: String,
     id: Int = 0
 ) {
     val sheetState = rememberModalBottomSheetState()
-    var folderName by remember { mutableStateOf("") }
+    var folderName by remember { mutableStateOf(folderName) }
     val scope = rememberCoroutineScope()
 
     ModalBottomSheet(

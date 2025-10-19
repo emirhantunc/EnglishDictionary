@@ -1,6 +1,9 @@
 package com.example.presentation.ui.explore
 
 
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +47,7 @@ import androidx.navigation.NavGraphBuilder
 import com.example.presentation.R
 import com.example.presentation.model.FolderState
 import com.example.presentation.model.WordState
-import com.example.presentation.ui.components.AnimatedIconAndAction
+import com.example.presentation.ui.components.AnimatedAction
 import com.example.presentation.ui.components.ExploreBottomSheet
 import com.example.presentation.ui.routes.ExploreScreenRoutes
 import com.example.presentation.viewmodel.ExplorerViewModel
@@ -59,6 +62,7 @@ fun NavGraphBuilder.ExplorerScreen(
 
     var showActionBar by remember { mutableStateOf(false) }
     val folders = viewModel.folderState.collectAsStateWithLifecycle().value
+
 
     LaunchedEffect(folders) {
         val foldersWithWords = folders.filter { it.wordCount > 0 }
@@ -159,13 +163,17 @@ fun NavGraphBuilder.ExplorerScreen(
         }
         Spacer(modifier = modifier.height(5.dp))
 
-
+        val targetHeight = if (showActionBar) 100.dp else 175.dp
+        val animatedHeight by animateDpAsState(
+            targetValue = targetHeight,
+            animationSpec = tween(durationMillis = 300, easing = FastOutLinearInEasing)
+        )
         if (folders.isNotEmpty()) {
             val word = viewModel.wordState.collectAsStateWithLifecycle().value
             if (word.isNotEmpty()) {
                 Card(
                     modifier = modifier
-                        .height(175.dp)
+                        .height(animatedHeight)
                         .fillMaxWidth(),
                     colors = CardDefaults.cardColors(
                         containerColor = Color(0x80E7FDFE)
@@ -209,7 +217,7 @@ fun NavGraphBuilder.ExplorerScreen(
 
         Spacer(modifier = modifier.weight(1f))
 
-        AnimatedIconAndAction(modifier = modifier, visible = showActionBar, onCloseClicked = {
+        AnimatedAction(modifier = modifier, visible = showActionBar, onCloseClicked = {
             showActionBar = false
         }, onDeleteClicked = {
             showActionBar = false
@@ -229,7 +237,8 @@ fun NavGraphBuilder.ExplorerScreen(
                     showBottomSheet = false
                 }, createFolder = {
                     viewModel.insertFolders(it)
-                }, id = longClickedFolder?.id ?: 0
+                }, id = longClickedFolder?.id ?: 0,
+                folderName = longClickedFolder?.name ?: ""
             )
         }
     }

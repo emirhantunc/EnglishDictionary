@@ -39,9 +39,7 @@ fun CreateFolderScreen(
     modifier: Modifier,
     viewModel: CreateFolderViewModel = hiltViewModel<CreateFolderViewModel>()
 ) {
-    var name by remember {
-        mutableStateOf("")
-    }
+    val name = viewModel.name
 
     Column(
         modifier = modifier
@@ -54,7 +52,7 @@ fun CreateFolderScreen(
         TextField(
             value = name,
             onValueChange = {
-                name = it
+                viewModel.onNameChange(it)
             },
             modifier = modifier
                 .height(56.dp)
@@ -85,7 +83,7 @@ fun CreateFolderScreen(
             modifier = modifier,
             onClicked = {
                 viewModel.createFolder(CreateFolderPresentation(id = 0, name = name))
-                name = ""
+                viewModel.onNameChange("")
             },
             text = R.string.btn_txt,
             color = 0x00000000

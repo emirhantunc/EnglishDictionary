@@ -49,13 +49,15 @@ import androidx.compose.ui.util.fastForEach
 import com.example.presentation.R
 
 @Composable
-fun ColumnScope.AnimatedIconAndAction(
+fun ColumnScope.AnimatedAction(
     modifier: Modifier,
     visible: Boolean,
     onCloseClicked: () -> Unit,
     onRenameClicked: () -> Unit,
     onDeleteClicked: () -> Unit
     ) {
+
+
 
     val actionItems: List<ActionBarItem> = listOf(
         ActionBarItem(
